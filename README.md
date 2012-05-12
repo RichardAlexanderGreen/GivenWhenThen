@@ -14,10 +14,13 @@ Both implementations subclass the existing TestCase class
 so that they run under the XUnit framework in the IDE
 and you get "red" and "green" automatically.
 
-Incidentally, I've looked over cuke4duke and JBehave;
-but chose to write my own Java implementation
+Incidentally, I've looked over cuke4duke and JBehave,
+but chose to create my own Java implementation [1]
 because those implemenations had too much "magic"
 to suit my taste.
+
+[1] with a little help from my friends Nate and Amber at 
+<a href="https://twitter.com/#!/CraftsmanGuild"> CraftsmanGuild</a>.
 
 Since Smalltalk has closures, 
 the Smalltalk implementation allows you to write relatively readable code.
