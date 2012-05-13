@@ -107,7 +107,9 @@ public class GivenWhenThen  extends TestCase {
 		results = this.then();
 		
 		// Does the program match the documentation ?
-		if( thenDescriptions.length != results.length ) { fail ("Number of results does not match descriptions."); }
+		if( thenDescriptions.length != results.length ) { 
+                        fail ("Number of results does not match descriptions."); 
+                }
 		
 		for( int i = 0; i < thenTexts.length; i++ ) {
 			Assert.assertTrue( thenTexts[i], results[i] );
@@ -149,7 +151,5 @@ public class GivenWhenThen  extends TestCase {
 			System.out.println( label + thenDescriptions[i] );
 		}
 	}
-
 }
-
 </pre>
