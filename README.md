@@ -111,7 +111,7 @@ public class GivenWhenThen  extends TestCase {
                         fail ("Number of results does not match descriptions."); 
                 }
 		
-		for( int i = 0; i < thenTexts.length; i++ ) {
+		for( int i = 0; i &lt; thenTexts.length; i++ ) {
 			Assert.assertTrue( thenTexts[i], results[i] );
 		};
 	}
@@ -146,7 +146,7 @@ public class GivenWhenThen  extends TestCase {
 		System.out.println( "Given: " + givenDescription );
 		System.out.println( "When: " + whenDescription );		
 		// Print results
-		for( int i = 0; i < thenDescriptions.length; i++ ) {
+		for( int i = 0; i &lt; thenDescriptions.length; i++ ) {
 			String label = results[i] ? "SUCCESS: " : "FAILURE: ";
 			System.out.println( label + thenDescriptions[i] );
 		}
