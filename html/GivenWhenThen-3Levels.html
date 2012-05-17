@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Given When Then - from Business Level to Unit Level</title>
+  <style>
+   chapter heading { font-size: xx-large; font-weight: bold; }
+   chapter p {margin-left: 2em;}
+   chapter ul {margin-left: 2em;}
+   chapter ol {margin-left: 2em;}
+
+   chapter pre {margin-left: 3em; background-color: lightGray; padding: 6px;}
+   
+   
+   chapter section heading {margin-left: 1em; font-size: x-large; font-weight: bold;}
+   chapter section p {margin-left: 3em;}
+
+   chapter section subsection heading {margin-left: 2em; font-size: large; font-weight: bold;}
+   chapter section subsection p {margin-left: 4em;}
+
+   chapter section subsection subsubsection heading {margin-left: 3em; font-size: medium; font-style: italic;}
+   chapter section subsection subsubsection p {margin-left: 5em;}
+  </style>
+</head>
+<body>
+  <chapter>
+    <heading>Given When Then - at Three Levels</heading>
+    <p>
+       The Given-When-Then style of writing requirements clarifies thinking.
+    </p>
+    <ul>
+        <li>The "Given" defines the preconditions that hold before an event or operation.
+        <li>The "When" identifies an event or operation
+       <li>The "Then" identifies the post conditions that hold after the event or operation.  
+      </ul>
+    
+    <p>We can apply Given-When-Then at three levels of requirements writing.
+        </p>
+
+    <ol>
+      <li>the business events (business behavior) involved at the highest level (organization/user actor),
+      <li>the user interface for business process proxies, and
+      <li>the specific code behavior at the unit-test level (robot actor).
+    </ol>
+    
+<pre>
+<b>At the business process level,</b>
+Given: [business goal / strategy]
+ When: [business process / event]
+ Then: [desired business behavior]       (This can be tested by a process audit.)
+
+<b>At the user-interface level . . .</b>
+Given: [user-interface context / mode]
+ When: [user action]
+ Then: [system response]                 (This can be tested through the UI. )
+
+<b>At the robot / computer level . . .</b>
+Given: [system state]
+ When: [system event / input / additional state]
+ Then: [expected system post-condition]  (This can be tested at Unit Test level)
+</pre>
+
+    <section>
+       <heading>Business Process Level</heading>
+        <p>
+      At the business process level, 
+      our focus is on describing the business context of a set of requirements.
+      Here is the template for process goals:
+    </p>
+<pre>
+Given: [business process goal / strategy]
+ When: [business process / event]
+ Then: [desired business behavior]      
+</pre>
+    <p>Here is an example:
+       </p>
+<pre>
+Given: The survey (ballot) is published (on-line); 
+       and, the survey (voting) period is in-progress. 
+ When: A respondent (voter) enters a vote on a ballot item.
+ Then: That vote is tallied.
+ Then: The vote is secret. (It can be authenticated. But, it cannot be traced.)
+ Then: The voter can audit (verify that their entry is in the collection).
+</pre>
+   <p>This level of specification does not result in an automated test.
+      It can be tested. But, the test typically involves some kind of audit.
+     </p>
+
+    <section>
+       <heading>Interface Level</heading>
+
+        <p>The interface level requirement identifies the interaction between actors.
+           Typically, one actor is a user and the second actor is the system.
+       In enterprise integration contexts, 
+      the two actors may be two robots (applications)
+      where each robot is the proxy (automated interface) for a business process.
+           The interface is typically a screen with a keyboard,
+       but other architectures are possible.
+       Here is the template for interface level specification.
+    </p>
+<pre>
+Given: [user-interface context / mode]
+ When: [user action]
+ Then: [system response]                
+</pre>
+      <p>Here is an example that follows on the business process above:
+       </p>
+<pre>
+Given: The user is signed-in and authenticated 
+         and has navigated to the survey (ballot) pane.
+ When: The question is a proposal.
+ Then: The allowed responses are Yes, No, and Abstain. 
+         Abstain is the default value.              
+</pre>
+    <p>Note that this describes the expected interaction 
+      without describing how it will be implemented.
+       The test could be manual. 
+       The tester would simply try out the user interface
+         and confirm that the possible responses were Yes, No, and Abstain.
+       </p>
+      <p>But we cannot write an automated test 
+      without knowing a great deal about the design.
+       However, the design could be indicated with Given-When-Then also.  
+       </p>
+<pre>
+Given: A ballot or survey represented in XML.
+ When: The ballot contains a proposal.
+ Then: The XML representation includes the form: 
+         "&lt;proposal&gt;proposal text&lt;/proposal&gt;". 
+ Then: The interface-builder (component) will generate interface code (HTML) 
+         from the XML.
+</pre>
+    <p>At this point, 
+         a competent programmer can write code that conforms to this design.
+       The executable test might look like this (Smalltalk):
+       </p>
+<pre>
+test1234ballotProposalXMLGeneratesHTML
+  "The allowed responses for a proposal are Yes, No, and Abstain."
+  | ballot ballotElement proposalElement html |
+  self given: [ ballot := XML element: 'ballot' 
+                                 with: [ XML element: 'proposal' 
+                                                with: ['proposal text'].
+                                       ].
+                "configuration comes from setUp"
+                builder := configuration interfaceBuilder. 
+                
+              ]
+        when: [ ballotElement := ballot nextElement.
+                proposalElement := ballotElement nextElement.
+                self assert: ( proposalElement isType: 'proposal' ).
+                html := builder buildHTMLfrom: proposalElement.
+              ]
+        then: [ self assert: ( html includes: 'Yes' ).
+                self assert: ( html includes: 'No' ).
+                self assert: ( html includes: 'Abstain' ).
+              ].
+</pre>
+     <p>Of course, we don't know if the HTML generated will actually execute correctly.
+        This test only confirms that the generated code contains the words we expect.
+        We also don't know if the widget will be a radio button group or a drop-down.
+        But that is a good thing. We don't want to have too much test all in one place.
+     </p>
+
+
+
+    
+
+
+
+
+<!-- Following is template -->
+<!--
+    <section>
+       <heading>Section Heading</heading>
+        <p>Section paragraph - blah  blah blah  blah blah  blah blah  blah</p>
+
+     <subsection>
+         <heading>Subsection Heading</heading>
+          <p>Subsection paragraph - blah  blah blah  blah blah  blah blah  blah</p>
+  
+
+       <subsubsection>
+           <heading>Subsubsection Heading</heading>
+            <p>Subsubsection paragraph - blah  blah blah  blah blah  blah blah  blah</p>
+    
+         </subsubsection>
+
+       </subsection>
+
+     </section>
+
+-->
+    </chapter>
+  </body>
+</html>
